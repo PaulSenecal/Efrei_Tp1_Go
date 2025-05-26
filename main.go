@@ -1,3 +1,10 @@
+/* Author: Paul Senecal
+*	Date: 2023-10-01
+*	Description: Programme d'annuaire
+*	Usage: go run main.go -nom "Doe" -prenom "John" -telephone "1234567890"
+*	Example: go run main.go -nom "Doe" -prenom "John" -telephone "1234567890"
+ */
+
 package main
 
 import (
@@ -9,28 +16,25 @@ import (
 
 func main() {
 
-	/*
-		entries := []Annuaire{
-			{nom: "Doe", prenom: "John", numero: "1234567890"},
-			{nom: "Smith", prenom: "Jane", numero: "0987654321"},
-		}*/
-
 	var nom = "default text"
-	flag.StringVar(&nom, "text", "default text", "Text to display")
-	flag.Parse()
+	flag.StringVar(&nom, "nom", "default nom", "le nom a ajouter dans l'annuaire")
 
-	/*var prenom = "default text"
-	flag.StringVar(&prenom, "text", "default text", "Text to display")
-	flag.Parse()*/
+	var prenom = "default text"
+	flag.StringVar(&prenom, "prenom", "default prenom", "le prenom a ajouter dans l'annuaire")
+
+	var telephone = "default text"
+	flag.StringVar(&telephone, "telephone", "default telephone", "le tel a ajouter dans l'annuaire")
+	flag.Parse()
 
 	fmt.Println("Programme Annuaire")
 
-	annuaire.GetAnnuaire()
+	annuaire.SetAnnuaire(nom, prenom, telephone)
+
+	/* utilisation des foncitons
 	annuaire.SetAnnuaire("Doe", "John", "1234567890")
 	annuaire.SetAnnuaire("Smith", "Jane", "0987654321")
 	annuaire.GetAnnuaire()
 	annuaire.SearchAnnuaire("Doe")
 	annuaire.DeleteAllAnnuaire()
-	annuaire.GetAnnuaire()
-
+	annuaire.GetAnnuaire()*/
 }
