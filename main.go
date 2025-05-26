@@ -28,5 +28,9 @@ func main() {
 	annuaire.GetAnnuaire()
 	annuaire.SetAnnuaire("Doe", "John", "1234567890")
 	annuaire.SetAnnuaire("Smith", "Jane", "0987654321")
+	annuaire.GetAnnuaire()
+	annuaire.SearchAnnuaire("Doe")
+	annuaire.DeleteAllAnnuaire()
+	annuaire.GetAnnuaire()
 
 }
