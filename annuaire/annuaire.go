@@ -1,5 +1,7 @@
 package annuaire
 
+import "fmt"
+
 type Annuaire struct {
 	nom    string
 	prenom string
@@ -12,41 +14,108 @@ var entries = []Annuaire{
 }
 
 func GetAnnuaire() {
-	println("Fetching the annuaire...")
+	fmt.Println("Liste de l'annuaire:")
+	fmt.Println("====================")
 
-	for _, entry := range entries {
-		println("Nom:", entry.nom, "Prenom:", entry.prenom, "Numero:", entry.numero)
+	if len(entries) == 0 {
+		fmt.Println("Aucun contact dans l'annuaire")
+		return
 	}
-}
-func SetAnnuaire(nom, prenom, numero string) {
-	println("New entry added:", nom, prenom, numero)
-	entries = append(entries, Annuaire{nom: nom, prenom: prenom, numero: numero})
-}
 
-func DeleteAnnuaire(nom string) {
-	println("Deleting entry with nom:", nom)
 	for i, entry := range entries {
-		println("Deleting entry:", entry.nom, entry.prenom, entry.numero)
-		entries = append(entries[:i], entries[i+1:]...)
-		break
+		fmt.Printf("%d. Nom: %s, Prénom: %s, Numéro: %s\n",
+			i+1, entry.nom, entry.prenom, entry.numero)
 	}
 }
-func DeleteAllAnnuaire() {
-	for i := 0; i < len(entries); i++ {
-		println("Deleting entry:", entries[i].nom, entries[i].prenom, entries[i].numero)
-		entries = append(entries[:i], entries[i+1:]...)
-		i--
-	}
+
+// SetAnnuaire ajoute un nouveau contact à l'annuaire
+func SetAnnuaire(nom, prenom, numero string) {
+	fmt.Printf("Ajout du contact: %s %s (%s)\n", prenom, nom, numero)
+	entries = append(entries, Annuaire{nom: nom, prenom: prenom, numero: numero})
+	fmt.Println("Contact ajouté avec succès!")
 }
-func UpdateAnnuaire() {
-	println("Update function not implemented yet.")
-}
-func SearchAnnuaire(nom string) {
-	println("Searching in the annuaire...")
-	for _, entry := range entries {
+
+// supprime un contact par nom
+func DeleteAnnuaire(nom string) {
+	fmt.Printf("Recherche du contact à supprimer: %s\n", nom)
+
+	for i, entry := range entries {
 		if entry.nom == nom {
-			println("Found:", entry.nom, entry.prenom, entry.numero)
+			fmt.Printf("Suppression du contact: %s %s (%s)\n",
+				entry.prenom, entry.nom, entry.numero)
+			entries = append(entries[:i], entries[i+1:]...)
+			fmt.Println("Contact supprimé avec succès!")
 			return
 		}
 	}
+
+	fmt.Printf("Aucun contact trouvé avec le nom: %s\n", nom)
+}
+
+// supprime tous les contacts
+func DeleteAllAnnuaire() {
+	fmt.Println("Suppression de tous les contacts...")
+
+	count := len(entries)
+	for i := len(entries) - 1; i >= 0; i-- {
+		fmt.Printf("Suppression: %s %s (%s)\n",
+			entries[i].prenom, entries[i].nom, entries[i].numero)
+		entries = entries[:i]
+	}
+
+	fmt.Printf("%d contact(s) supprimé(s)\n", count)
+}
+
+func UpdateAnnuaire(nom, nouveauPrenom, nouveauNumero string) {
+	fmt.Printf("Recherche du contact à modifier: %s\n", nom)
+
+	for i, entry := range entries {
+		if entry.nom == nom {
+			fmt.Printf("Contact trouvé: %s %s (%s)\n",
+				entry.prenom, entry.nom, entry.numero)
+
+			if nouveauPrenom != "" {
+				entries[i].prenom = nouveauPrenom
+			}
+			if nouveauNumero != "" {
+				entries[i].numero = nouveauNumero
+			}
+
+			fmt.Printf("Contact modifié: %s %s (%s)\n",
+				entries[i].prenom, entries[i].nom, entries[i].numero)
+			fmt.Println("Contact mis à jour avec succès!")
+			return
+		}
+	}
+
+	fmt.Printf("Aucun contact trouvé avec le nom: %s\n", nom)
+}
+
+func SearchAnnuaire(nom string) {
+	fmt.Printf("Recherche dans l'annuaire: %s\n", nom)
+	fmt.Println("==============================")
+
+	found := false
+	for _, entry := range entries {
+		if entry.nom == nom {
+			fmt.Printf("Contact trouvé:\n")
+			fmt.Printf("  Nom: %s\n", entry.nom)
+			fmt.Printf("  Prénom: %s\n", entry.prenom)
+			fmt.Printf("  Numéro: %s\n", entry.numero)
+			found = true
+		}
+	}
+
+	if !found {
+		fmt.Printf("Aucun contact trouvé avec le nom: %s\n", nom)
+	}
+}
+
+func ContactExists(nom string) bool {
+	for _, entry := range entries {
+		if entry.nom == nom {
+			return true
+		}
+	}
+	return false
 }

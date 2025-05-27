@@ -1,115 +1,136 @@
-# Annuaire Go
-
-Un programme simple de gestion d'annuaire téléphonique écrit en Go.
-
-## Auteur
-Paul Senecal - 2023-10-01
+# TP1-Annuaire
 
 ## Description
-Ce programme permet de gérer un annuaire téléphonique avec les fonctionnalités de base : ajout, recherche, suppression et affichage des entrées.
+Programme d'annuaire simple en Go permettant de gérer des contacts avec nom, prénom et numéro de téléphone.
+
+## Membres du groupe
+- Paul Senecal
 
 ## Structure du projet
 ```
 tp1/
-├── main.go          # Point d'entrée du programme
+├── main.go           # Point d'entrée du programme avec gestion des flags
 ├── annuaire/
-│   └── annuaire.go  # Package contenant la logique de l'annuaire
-└── README.md        # Ce fichier
+│   ├── annuaire.go   # Package contenant la logique métier
+│   └── annuaire_test.go # Tests unitaires
+├── go.mod            # Module Go
+└── README.md         # Documentation
 ```
 
-## Installation
-1. Clonez le repository
-2. Assurez-vous d'avoir Go installé sur votre système
-3. Naviguez dans le répertoire du projet
+## Fonctionnalités
 
-## Utilisation
-### Commande de base
+### Actions disponibles
+- **Ajouter** un contact
+- **Rechercher** un contact par nom
+- **Lister** tous les contacts
+- **Supprimer** un contact
+- **Modifier** un contact existant
+
+### Fonctionnalités avancées
+- Vérification de l'existence d'un contact avant ajout (évite les doublons)
+- Modification partielle des contacts (prénom et/ou téléphone)
+- Messages d'erreur informatifs
+- Interface en ligne de commande intuitive
+
+## Installation et utilisation
+
+### Prérequis
+- Go 1.19 ou plus récent
+
+### Installation
 ```bash
-go run main.go -nom "Nom" -prenom "Prenom" -telephone "NumeroTelephone"
+git clone <lien-du-repo>
+cd tp1
+go mod init github.com/PaulSenecal/tp1
 ```
 
-### Exemples
-```bash
-# Ajouter une entrée
-go run main.go -nom "Doe" -prenom "John" -telephone "1234567890"
+### Commandes d'utilisation
 
-# Utiliser les valeurs par défaut
+#### Ajouter un contact
+```bash
+go run main.go --action ajouter --nom "Charlie" --prenom "John" --tel "0811223344"
+```
+
+#### Rechercher un contact
+```bash
+go run main.go --action rechercher --nom "Alice"
+```
+
+#### Lister tous les contacts
+```bash
+go run main.go --action lister
+```
+
+#### Supprimer un contact
+```bash
+go run main.go --action supprimer --nom "Charlie"
+```
+
+#### Modifier un contact
+```bash
+# Modifier le prénom et le téléphone
+go run main.go --action modifier --nom "Charlie" --prenom "Charles" --tel "0123456789"
+
+# Modifier seulement le prénom
+go run main.go --action modifier --nom "Charlie" --prenom "Charles"
+
+# Modifier seulement le téléphone
+go run main.go --action modifier --nom "Charlie" --tel "0123456789"
+```
+
+#### Aide
+```bash
 go run main.go
+# Affiche la liste des actions disponibles
 ```
 
-### Paramètres
-- `-nom` : Le nom de famille à ajouter dans l'annuaire
-- `-prenom` : Le prénom à ajouter dans l'annuaire  
-- `-telephone` : Le numéro de téléphone à ajouter dans l'annuaire
+## Tests unitaires
 
-## Fonctionnalités disponibles
-
-### Package `annuaire`
-Le package annuaire propose les fonctions suivantes :
-
-#### `GetAnnuaire()`
-Affiche tous les entries de l'annuaire.
-
-#### `SetAnnuaire(nom, prenom, numero string)`
-Ajoute une nouvelle entrée à l'annuaire.
-
-#### `SearchAnnuaire(nom string)`
-Recherche une entrée par nom dans l'annuaire.
-
-#### `DeleteAnnuaire(nom string)`
-Supprime une entrée spécifique de l'annuaire basée sur le nom.
-
-#### `DeleteAllAnnuaire()`
-Supprime toutes les entrées de l'annuaire.
-
-
-
-## Structure des données
-```go
-type Annuaire struct {
-    nom    string  // Nom de famille
-    prenom string  // Prénom
-    numero string  // Numéro de téléphone
-}
-```
-
-## Données par défaut
-L'annuaire contient initialement deux entrées :
-- emmanuel John - 1234567890
-- laurent Jane - 0987654321
-
-## Compilation
+### Exécuter les tests
 ```bash
-# Compiler le programme
-go build main.go
-
-# Exécuter le binaire compilé
-./main -nom "Doe" -prenom "John" -telephone "1234567890"
+cd annuaire
+go test -v
 ```
 
-## Exemples d'utilisation avancée
-Pour utiliser toutes les fonctionnalités, vous pouvez décommenter et modifier la section dans `main.go` :
+### Tests implémentés
+1. **TestSetAnnuaire** - Teste l'ajout de contacts
+2. **TestContactExists** - Teste la vérification d'existence de contacts
+3. **TestDeleteAnnuaire** - Teste la suppression de contacts
+4. **TestUpdateAnnuaire** - Teste la modification de contacts
 
-```go
-annuaire.SetAnnuaire("Doe", "John", "1234567890")
-annuaire.SetAnnuaire("Smith", "Jane", "0987654321")
-annuaire.GetAnnuaire()
-annuaire.SearchAnnuaire("Doe")
-annuaire.DeleteAllAnnuaire()
-annuaire.GetAnnuaire()
+## Exemples d'utilisation
+
+### Scénario complet
+```bash
+# Lister l'annuaire initial
+go run main.go --action lister
+
+# Ajouter un nouveau contact
+go run main.go --action ajouter --nom "Dupont" --prenom "Marie" --tel "0606060606"
+
+# Rechercher le contact ajouté
+go run main.go --action rechercher --nom "Dupont"
+
+# Modifier le contact
+go run main.go --action modifier --nom "Dupont" --prenom "Marie-Claire" --tel "0707070707"
+
+# Supprimer le contact
+go run main.go --action supprimer --nom "Dupont"
+
+# Vérifier la suppression
+go run main.go --action lister
 ```
 
-## Notes techniques
-- Le programme utilise le package `flag` pour la gestion des arguments en ligne de commande
-- Les données sont stockées en mémoire et ne persistent pas entre les exécutions
-- La fonction de suppression individuelle a un comportement qui pourrait nécessiter une révision
+## Gestion d'erreurs
+- Vérification des paramètres requis pour chaque action
+- Détection des contacts déjà existants lors de l'ajout
+- Messages d'erreur explicites
+- Codes de sortie appropriés
 
-## Améliorations possibles
-- Implémenter la fonction `UpdateAnnuaire()`
-- Ajouter la persistance des données (fichier, base de données)
-- Améliorer la gestion des erreurs
-- Ajouter des validations pour les numéros de téléphone
-- Implémenter une interface utilisateur plus interactive
+## Architecture
+Le projet utilise une architecture modulaire avec :
+- **main.go** : Interface utilisateur et gestion des flags
+- **annuaire/annuaire.go** : Logique métier et manipulation des données
+- **annuaire/annuaire_test.go** : Tests unitaires complets
 
-## Licence
-Ce projet est à des fins éducatives.
+Les données sont stockées en mémoire dans un slice de structures `Annuaire`.
